@@ -521,8 +521,32 @@
 </footer>
 
 <script>
-  function handleSubmit(e) {
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxF0_-d2Eq2rcRB6lkH4d0X9wA0teF9fau45ixY7vIvtND52nO3FnBUODqSP2m9gEKC/exec';
+
+  async function handleSubmit(e) {
     e.preventDefault();
+    const btn = document.querySelector('.form-submit');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+
+    const data = {
+      fname:   document.getElementById('fname').value,
+      lname:   document.getElementById('lname').value,
+      phone:   document.getElementById('phone').value,
+      invited: document.getElementById('invited').value,
+    };
+
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (err) {
+      console.error('Submission error:', err);
+    }
+
     document.getElementById('rsvp-form').style.display = 'none';
     document.getElementById('success-msg').style.display = 'block';
   }
