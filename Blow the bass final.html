@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Night Party — Bunker 616 · April 25</title>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #08090D;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --border-bright: rgba(255,255,255,0.18);
+      --text: #F8F7FF;
+      --muted: rgba(240,239,255,0.72);
+      --dim: rgba(240,239,255,0.45);
+      --iris-blue:   #5B8DEF;
+      --iris-violet: #A96EF5;
+      --iris-teal:   #3DD9C5;
+      --iris-pink:   #F06ACA;
+      --iris-gold:   #F0C040;
+      --radius: 18px;
+      --radius-sm: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+      z-index: 1;
+    }
+
+    .hero-inner {
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .venue-tag {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(58px, 12vw, 108px);
+      line-height: 0.92;
+      color: #fff;
+      background-color: var(--black);
+      background-image: linear-gradient(135deg, #ffffff 0%, #E0D8FF 25%, #A8D8FF 50%, #FFB8F0 75%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 40px rgba(160,130,255,0.45));
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-date {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(22px, 5vw, 32px);
+      letter-spacing: 0.14em;
+      color: var(--text);
+      margin-top: 24px;
+      opacity: 1;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .lineups {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px 24px;
+      margin-top: 36px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+    .lineup-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(18px, 4vw, 22px);
+      letter-spacing: 0.12em;
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 0 0 18px rgba(169,110,245,0.8), 0 0 6px rgba(91,141,239,0.6);
+    }
+    .lineup-dot { display: none; }
+
+    .hero-pills {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+      animation: fadeUp 0.7s 0.35s ease both;
+    }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 12px 22px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      backdrop-filter: blur(10px);
+    }
+    .pill svg { opacity: 0.6; flex-shrink: 0; width: 16px; height: 16px; }
+
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 36px;
+      animation: fadeUp 0.7s 0.45s ease both;
+    }
+
+    .btn-primary {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 34px;
+      border-radius: 100px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(130deg, var(--iris-violet), var(--iris-blue) 60%, var(--iris-teal));
+      box-shadow: 0 0 32px rgba(140,110,255,0.35), 0 4px 16px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 52px rgba(140,110,255,0.55), 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 28px;
+      border-radius: 100px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 17px;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    .btn-secondary:hover { transform: translateY(-2px); border-color: var(--border-bright); color: var(--text); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: fadeUp 0.7s 1s ease both;
+    }
+    .scroll-hint-text { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+    .scroll-arrow { animation: bounce 2s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── SECTIONS ── */
+    .section { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+    .section-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--iris-violet); margin-bottom: 40px; opacity: 0.8; }
+    hr.sep { border: none; border-top: 1px solid var(--border); max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+    /* ── INFO CARDS ── */
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .info-card:hover { transform: translateY(-4px); border-color: var(--border-bright); box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(140,110,255,0.08); }
+    .info-icon { font-size: 20px; margin-bottom: 16px; display: block; }
+    .info-card-label { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-bottom: 7px; }
+    .info-card-value { font-family: 'Bebas Neue', cursive; font-size: 32px; color: var(--text); line-height: 1.15; }
+    .info-card-sub { font-size: 15px; color: var(--muted); margin-top: 5px; }
+
+    /* ── MAP ── */
+    .map-section { position: relative; z-index: 1; padding: 80px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .map-inner { max-width: 960px; margin: 0 auto; }
+    .map-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+    .map-address { font-family: 'Bebas Neue', cursive; font-size: 24px; color: var(--text); line-height: 1.2; }
+    .map-address-sub { font-size: 16px; color: var(--muted); margin-top: 5px; }
+    .map-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 100px;
+      padding: 10px 20px; font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 500;
+      color: var(--muted); text-decoration: none; backdrop-filter: blur(10px);
+      transition: border-color 0.2s, color 0.2s; white-space: nowrap;
+    }
+    .map-btn:hover { border-color: var(--border-bright); color: var(--text); }
+    .map-embed { width: 100%; height: 340px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); filter: grayscale(80%) invert(1) brightness(0.55) hue-rotate(200deg); }
+    .map-embed iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* ── TICKET ── */
+    .ticket-section { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+    .ticket-card {
+      position: relative;
+      border-radius: 24px;
+      padding: 56px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+      overflow: hidden;
+      background: linear-gradient(135deg, #100C20 0%, #0C1526 50%, #0E0C20 100%);
+      border: 1px solid rgba(140,110,255,0.2);
+      box-shadow: 0 0 80px rgba(90,80,200,0.12);
+    }
+    .ticket-card::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,80,220,0.18) 0%, transparent 65%);
+      top: -200px; right: -150px;
+      pointer-events: none;
+    }
+    .ticket-left { position: relative; z-index: 1; text-align: left; }
+    .ticket-eyebrow { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+    .ticket-price {
+      font-family: 'Barlow', sans-serif;
+      font-size: clamp(56px, 10vw, 86px);
+      line-height: 1;
+      background: linear-gradient(130deg, #fff 0%, #C8BFFF 40%, #8BD4F5 75%, #F5A8E8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .ticket-price sup { font-size: 0.38em; vertical-align: baseline; opacity: 0.7; margin-right: 2px; }
+    .ticket-desc { font-size: 16px; color: var(--muted); margin-top: 10px; }
+    .ticket-right { position: relative; z-index: 1; }
+    .btn-ticket {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 18px 44px; border-radius: 100px;
+      font-family: 'Barlow', sans-serif; font-size: 16px; font-weight: 500; color: #fff;
+      text-decoration: none; border: none; cursor: pointer;
+      background: linear-gradient(130deg, var(--iris-violet), var(--iris-blue) 60%, var(--iris-teal));
+      box-shadow: 0 0 40px rgba(140,110,255,0.4), 0 6px 20px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease; white-space: nowrap;
+    }
+    .btn-ticket:hover { transform: translateY(-2px); box-shadow: 0 0 56px rgba(140,110,255,0.55), 0 10px 28px rgba(0,0,0,0.5); }
+
+    /* ── FORM ── */
+    .form-section { position: relative; z-index: 1; padding: 80px 24px; border-top: 1px solid var(--border); }
+    .form-inner { max-width: 560px; margin: 0 auto; }
+    .form-title { font-family: 'Bebas Neue', cursive; font-size: 36px; color: var(--text); margin-bottom: 8px; line-height: 1.1; }
+    .form-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 8px; text-transform: uppercase; }
+    .form-input {
+      width: 100%; padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--surface); font-family: 'Barlow', sans-serif; font-size: 17px; color: var(--text);
+      outline: none; backdrop-filter: blur(10px); transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      -webkit-appearance: none; appearance: none;
+    }
+    .form-input:focus { border-color: rgba(140,110,255,0.5); box-shadow: 0 0 0 3px rgba(140,110,255,0.12); }
+    .form-input::placeholder { color: var(--dim); }
+    .form-input option { background: #111; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-submit {
+      width: 100%; padding: 16px; border-radius: 100px;
+      font-family: 'Barlow', sans-serif; font-size: 17px; font-weight: 500; color: #fff; border: none; cursor: pointer; margin-top: 10px;
+      background: linear-gradient(130deg, var(--iris-violet), var(--iris-blue) 60%, var(--iris-teal));
+      box-shadow: 0 0 28px rgba(140,110,255,0.3), 0 4px 14px rgba(0,0,0,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .form-submit:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(140,110,255,0.45), 0 8px 20px rgba(0,0,0,0.5); }
+    .form-note { text-align: center; font-size: 14px; color: var(--dim); margin-top: 14px; }
+    .success-msg { display: none; border: 1px solid rgba(61,217,197,0.3); background: rgba(61,217,197,0.06); border-radius: var(--radius-sm); padding: 20px; color: var(--iris-teal); font-size: 15px; font-weight: 500; text-align: center; margin-top: 16px; }
+
+    /* ── FOOTER ── */
+    footer { position: relative; z-index: 1; text-align: center; padding: 40px 24px; font-size: 11px; letter-spacing: 0.1em; color: var(--dim); border-top: 1px solid var(--border); }
+
+    @media (max-width: 600px) {
+      /* Hero */
+      .hero { padding: 60px 20px 70px; }
+      .venue-tag { font-size: 10px; letter-spacing: 0.18em; margin-bottom: 20px; }
+      .hero-title { font-size: clamp(52px, 18vw, 80px); line-height: 0.88; }
+      .hero-date { font-size: clamp(20px, 6vw, 28px); letter-spacing: 0.12em; margin-top: 18px; opacity: 1; text-shadow: 0 0 20px rgba(169,110,245,0.7); }
+
+      /* DJ grid — tighter on mobile */
+      .lineups { grid-template-columns: repeat(3, 1fr); gap: 10px 12px; margin-top: 24px; max-width: 100%; }
+      .lineup-name { font-size: clamp(16px, 5vw, 20px); letter-spacing: 0.06em; }
+
+      /* Pills — stack vertically, full width feel */
+      .hero-pills { flex-direction: column; align-items: center; gap: 8px; margin-top: 28px; }
+      .pill { font-size: 16px; padding: 12px 20px; width: 100%; max-width: 280px; justify-content: center; }
+
+      /* CTA buttons */
+      .hero-cta { flex-direction: column; align-items: center; gap: 10px; margin-top: 28px; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 280px; justify-content: center; font-size: 14px; padding: 14px 24px; }
+
+      /* Sections */
+      .section { padding: 56px 20px; }
+      .section-label { margin-bottom: 24px; }
+
+      /* Info cards — full width single column */
+      .info-grid { grid-template-columns: 1fr; gap: 10px; }
+      .info-card { padding: 20px; }
+      .info-card-value { font-size: 28px; }
+
+      /* Map section */
+      .map-section { padding: 56px 20px; }
+      .map-inner > div { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+      /* Ticket */
+      .ticket-section { padding: 56px 20px; }
+      .ticket-card { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 24px; }
+      .ticket-price { font-size: clamp(48px, 14vw, 68px); }
+      .btn-ticket { width: 100%; justify-content: center; padding: 16px 24px; font-size: 15px; }
+
+      /* RSVP form */
+      .form-section { padding: 56px 20px; }
+      .form-title { font-size: 28px; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+      .form-input { font-size: 16px; } /* 16px prevents iOS auto-zoom */
+
+      /* Footer */
+      footer { font-size: 10px; letter-spacing: 0.06em; padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="venue-tag">Bunker 616 · Seoul</span>
+    <h1 class="hero-title">BLOW<br/>THE<br/>BASS</h1>
+    <div class="hero-date">25 APRIL</div>
+    <div class="lineups">
+      <span class="lineup-name">PODONG</span>
+      <span class="lineup-name">SUCKOH</span>
+      <span class="lineup-name">OIBRO</span>
+      <span class="lineup-name">MABBAK</span>
+      <span class="lineup-name">VIGGIE</span>
+      <span class="lineup-name">SIRASONI</span>
+    </div>
+    <div class="hero-pills">
+      <div class="pill">
+        <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 1v3M11 1v3M1 6h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Sat, April 25 2026
+      </div>
+      <div class="pill">
+        <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        20:00 – 03:00
+      </div>
+      <div class="pill">
+        <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M8 1.5A4.5 4.5 0 0 1 12.5 6c0 3-4.5 8.5-4.5 8.5S3.5 9 3.5 6A4.5 4.5 0 0 1 8 1.5Z" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="6" r="1.5" stroke="currentColor" stroke-width="1.4"/></svg>
+        벙커 616, 역삼동 616-5
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#rsvp" class="btn-primary">Get Tickets — ₩30,000</a>
+      <a href="#info" class="btn-secondary">Details</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span class="scroll-hint-text">Scroll</span>
+    <svg class="scroll-arrow" width="16" height="16" fill="none" viewBox="0 0 16 16">
+      <path d="M8 3v10M3 9l5 5 5-5" stroke="rgba(240,239,248,0.25)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<section id="info" class="section">
+  <p class="section-label">Event details</p>
+  <div class="info-grid">
+    <div class="info-card"><span class="info-icon">👕</span><div class="info-card-label">Dress code</div><div class="info-card-value">No dress code</div><div class="info-card-sub">Come as you are</div></div>
+    <div class="info-card"><span class="info-icon">🎁</span><div class="info-card-label">Special gift</div><div class="info-card-value">First 30 people</div><div class="info-card-sub">Get a surprise gift at the door</div></div>
+  </div>
+</section>
+
+<!-- TICKET -->
+<section class="ticket-section">
+  <div class="ticket-card">
+    <div class="ticket-left">
+      <div class="ticket-eyebrow">Entrance fee</div>
+      <div class="ticket-price"><sup>₩</sup>30,000</div>
+      <div class="ticket-desc">General admission · One night only</div>
+    </div>
+    <div class="ticket-right">
+      <a href="#rsvp" class="btn-ticket">Reserve Your Spot →</a>
+    </div>
+  </div>
+</section>
+
+<hr class="sep" />
+
+<!-- RSVP -->
+<section id="rsvp" class="form-section">
+  <div class="form-inner">
+    <h2 class="form-title">RSVP</h2>
+    <p class="form-subtitle">Reserve your spot for the night.<br/>We'll see you on the floor.</p>
+    <form id="rsvp-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="fname">First name</label>
+          <input class="form-input" type="text" id="fname" placeholder="Gildong" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lname">Last name</label>
+          <input class="form-input" type="text" id="lname" placeholder="Hong" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone number (optional)</label>
+        <input class="form-input" type="tel" id="phone" placeholder="010-0000-0000" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="invited">Who invited you?</label>
+        <select class="form-input" id="invited" required>
+          <option value="" disabled selected>Select a name</option>
+          <option value="seunghyun">Seunghyun Park</option>
+          <option value="hyungseok">Hyungseok Oh</option>
+          <option value="dongyoon">Dongyoon Lee</option>
+        </select>
+      </div>
+      <!-- Wire transfer info -->
+      <div style="background:rgba(169,110,245,0.08);border:1px solid rgba(169,110,245,0.25);border-radius:var(--radius-sm);padding:18px 20px;margin-bottom:18px;">
+        <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--iris-violet);margin-bottom:10px;opacity:0.9;">Payment — Wire transfer</div>
+        <div style="font-size:15px;font-weight:500;color:var(--text);letter-spacing:0.03em;">토스뱅크 100242843279</div>
+        <div style="font-size:14px;color:var(--muted);margin-top:4px;">예금주: 박승현</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:8px;">Please send the exact amount before arriving. Use your name as the transfer memo.</div>
+      </div>
+
+      <button type="submit" class="form-submit">Reserve Now →</button>
+      <p class="form-note">Reservation holds your spot. Payment confirms entry.</p>
+    </form>
+
+    <!-- Success / completion page -->
+    <div id="success-msg" style="display:none;text-align:center;padding:40px 0;">
+      <div style="font-size:48px;margin-bottom:20px;">✦</div>
+      <h3 style="font-family:'Bebas Neue',cursive;font-size:28px;color:var(--text);margin-bottom:12px;">YOU'RE IN.</h3>
+      <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:28px;">
+        Your spot is reserved at <strong style="color:var(--text);">Bunker 616</strong>.<br/>
+        Complete your payment to confirm entry:
+      </p>
+      <div style="background:rgba(61,217,197,0.07);border:1px solid rgba(61,217,197,0.25);border-radius:var(--radius-sm);padding:20px;margin-bottom:28px;">
+        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--iris-teal);margin-bottom:10px;">Wire transfer details</div>
+        <div style="font-size:18px;font-weight:600;color:var(--text);letter-spacing:0.04em;">토스뱅크 100242843279</div>
+        <div style="font-size:14px;color:var(--muted);margin-top:4px;">예금주: 박승현</div>
+      </div>
+      <p style="font-size:13px;color:var(--dim);">See you on April 25 — doors open at 19:00. 🎶</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  BLOW THE BASS &nbsp;·&nbsp; APRIL 25, 2026 &nbsp;·&nbsp; 벙커 616, 강남구 역삼동 616-5, SEOUL
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('rsvp-form').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+  }
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(el => {
+      if (el.isIntersecting) { el.target.style.opacity='1'; el.target.style.transform='translateY(0)'; }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.info-card, .ticket-card').forEach(el => {
+    el.style.opacity='0'; el.style.transform='translateY(28px)';
+    el.style.transition='opacity 0.55s ease, transform 0.55s ease, border-color 0.22s, box-shadow 0.22s';
+    obs.observe(el);
+  });
+
+  // Crystal canvas
+  (function() {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, crystals = [];
+    const COLORS = [[91,141,239],[169,110,245],[61,217,197],[240,106,202],[240,192,64]];
+
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    function rnd(a,b) { return a + Math.random()*(b-a); }
+
+    function make() {
+      const col = COLORS[Math.floor(Math.random()*COLORS.length)];
+      return { x:rnd(0,W), y:rnd(0,H), size:rnd(28,85), angle:rnd(0,Math.PI*2),
+        vx:rnd(-0.12,0.12), vy:rnd(-0.10,0.10), va:rnd(-0.003,0.003),
+        alpha:rnd(0.2,0.65), color:col };
+    }
+
+    function draw(c) {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.angle);
+      const s = c.size, [r,g,b] = c.color;
+      const r2=Math.min(r+60,255), g2=Math.min(g+60,255), b2=Math.min(b+80,255);
+
+      // top pyramid
+      ctx.beginPath();
+      ctx.moveTo(0,-s); ctx.lineTo(s*0.6,0); ctx.lineTo(0,s*0.4); ctx.lineTo(-s*0.6,0);
+      ctx.closePath();
+      const gT = ctx.createLinearGradient(0,-s,0,s*0.4);
+      gT.addColorStop(0,`rgba(${r},${g},${b},${c.alpha*0.9})`);
+      gT.addColorStop(0.5,`rgba(${r2},${g2},${b2},${c.alpha*0.45})`);
+      gT.addColorStop(1,`rgba(${r},${g},${b},${c.alpha*0.25})`);
+      ctx.fillStyle=gT; ctx.fill();
+      ctx.strokeStyle=`rgba(${r2},${g2},${b2},${c.alpha*0.65})`;
+      ctx.lineWidth=0.8; ctx.stroke();
+
+      // bottom pyramid
+      ctx.beginPath();
+      ctx.moveTo(0,s); ctx.lineTo(s*0.6,0); ctx.lineTo(0,-s*0.4); ctx.lineTo(-s*0.6,0);
+      ctx.closePath();
+      const gB = ctx.createLinearGradient(0,s,0,-s*0.4);
+      gB.addColorStop(0,`rgba(${r},${g},${b},${c.alpha*0.75})`);
+      gB.addColorStop(0.5,`rgba(${r2},${g2},${b2},${c.alpha*0.35})`);
+      gB.addColorStop(1,`rgba(${r},${g},${b},${c.alpha*0.15})`);
+      ctx.fillStyle=gB; ctx.fill(); ctx.stroke();
+
+      // centre highlight
+      ctx.beginPath(); ctx.moveTo(-s*0.28,0); ctx.lineTo(s*0.28,0);
+      ctx.strokeStyle=`rgba(255,255,255,${c.alpha*0.25})`; ctx.lineWidth=0.5; ctx.stroke();
+      ctx.restore();
+    }
+
+    function init() { resize(); crystals = Array.from({length:18}, make); }
+
+    function tick() {
+      ctx.clearRect(0,0,W,H);
+      for (const c of crystals) {
+        c.x+=c.vx; c.y+=c.vy; c.angle+=c.va;
+        if(c.x<-120) c.x=W+120; if(c.x>W+120) c.x=-120;
+        if(c.y<-120) c.y=H+120; if(c.y>H+120) c.y=-120;
+        draw(c);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('resize', resize);
+    init(); tick();
+  })();
+</script>
+</body>
+</html>
